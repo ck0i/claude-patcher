@@ -2,6 +2,28 @@
 
 Patches Claude Code's security restrictions and re-applies automatically on every invocation.
 
+## Prerequisites
+
+This patcher targets the **npm version** of Claude Code (`@anthropic-ai/claude-code`).
+
+**Install Node.js** (includes npm): https://nodejs.org — LTS version recommended.
+
+**Install Claude Code via npm:**
+
+```batch
+npm install -g @anthropic-ai/claude-code
+```
+
+Verify it installed correctly:
+
+```batch
+claude --version
+```
+
+> The patcher expects Claude Code at `%APPDATA%\npm\node_modules\@anthropic-ai\claude-code\cli.js` — the default global npm install location on Windows.
+
+---
+
 ## Quick Start
 
 **1. Install (run once):**
