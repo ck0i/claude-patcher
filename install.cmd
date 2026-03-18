@@ -5,13 +5,11 @@ echo Claude Code Patcher Installer
 echo ==============================
 echo.
 
-:: check if running as admin for PATH modification
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Note: Run as Administrator to add to system PATH automatically.
-    echo Otherwise, manually add %~dp0 to your PATH.
-    echo.
-)
+:: add patcher dir to user PATH (before npm) so 'claude' runs the wrapper
+set "PATCHER_DIR=%~dp0"
+if "%PATCHER_DIR:~-1%"=="\" set "PATCHER_DIR=%PATCHER_DIR:~0,-1%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0addpath.ps1"
+echo.
 
 :: apply patch immediately
 echo Applying patches...
@@ -46,10 +44,9 @@ echo.
 echo ==============================
 echo Installation complete!
 echo.
-echo Usage options:
-echo   1. Use wrapper:  %~dp0claude.cmd [args]
-echo   2. Add %~dp0 to PATH (before npm path) to override 'claude' command
-echo   3. Run watcher:  powershell -ExecutionPolicy Bypass -File "%~dp0watcher.ps1"
+echo Usage:
+echo   Just run 'claude' in a new terminal - the wrapper handles patching automatically.
+echo   Optional watcher (auto-repatch on update): powershell -ExecutionPolicy Bypass -File "%~dp0watcher.ps1"
 echo.
 echo Run 'node %~dp0patcher.js --status' to check patch status anytime.
 echo.

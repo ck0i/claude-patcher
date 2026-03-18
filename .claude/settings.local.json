@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd /c \"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\GitHub\\\\claude-patcher\\\\install.cmd\")"
+    ]
+  }
+}
