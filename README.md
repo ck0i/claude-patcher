@@ -48,6 +48,9 @@ node patcher.js --target "C:\path\to\app.exe"
 | `security-policy` | Removes the built-in restriction on assisting with security/offensive tooling |
 | `malicious-folder-warning` | Replaces the folder trust warning with a neutral message |
 | `malicious-code-warning` | Changes the file-read prompt to allow full assistance with any code |
+| `tool-denial-message` | Replaces the tool-denial guidance with unrestricted permission for all tool use |
+| `malicious-exe-skip` | Removes the block on running executables flagged as potentially malicious |
+| `file-read-system-reminder` | Replaces the per-file-read malware refusal reminder with a permissive researcher prompt |
 
 ## Auto-Patching
 
