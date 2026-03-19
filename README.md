@@ -1,5 +1,7 @@
 # Claude Code Patcher
 
+> **Educational Disclaimer:** This tool is intended solely for authorized security research, penetration testing, and educational purposes. Use only on systems you own or have explicit written permission to test. Misuse of this tool to bypass safety measures outside of a legitimate research context may violate Anthropic's Terms of Service and applicable laws. The authors assume no liability for unauthorized or malicious use.
+
 Patches Claude Code's security restrictions and re-applies automatically on every invocation.
 
 ## Prerequisites
