@@ -50,11 +50,17 @@ The wrapper intercepts the `claude` command, re-patches if needed (e.g. after an
 :: Check patch status
 node patcher.js --status
 
+:: Validate whether each patch's find string is still present (detects outdated patches after updates)
+node patcher.js --validate
+
 :: Force re-patch
 node patcher.js --force
 
 :: Patch a specific target (exe, asar, or directory)
 node patcher.js --target "C:\path\to\app.exe"
+
+:: Validate patches against a specific target
+node patcher.js --validate --target "C:\path\to\app.exe"
 ```
 
 ## How It Works
@@ -86,6 +92,17 @@ node patcher.js --target "C:\path\to\app.exe"
 | `install.cmd` | One-time setup: PATH + initial patch |
 | `uninstall.cmd` | Removes patch marker file |
 | `addpath.ps1` | Adds patcher dir to user PATH (called by install.cmd) |
+
+## Native / Electron App Targets
+
+The patcher supports native Electron-based Claude installs in addition to the npm CLI. Point `--target` at the install directory or executable and it will automatically locate and patch the bundled `app.asar`:
+
+```batch
+node patcher.js --target "C:\Users\<you>\AppData\Local\Programs\Claude Code"
+node patcher.js --target "C:\Users\<you>\AppData\Local\Programs\Claude Code\Claude Code.exe"
+```
+
+> **Asar integrity warning:** Some Electron builds embed a hash of `app.asar` inside the executable. If the app refuses to launch after patching, the build likely enforces asar integrity. The patcher will print a warning when this is detected. A `.bak` backup of the original asar is always created before any binary patch is applied.
 
 ## Adding Custom Patches
 
