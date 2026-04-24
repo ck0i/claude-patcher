@@ -22,7 +22,11 @@ Verify it installed correctly:
 claude --version
 ```
 
-> The patcher expects Claude Code at `%APPDATA%\npm\node_modules\@anthropic-ai\claude-code\cli.js` — the default global npm install location on Windows.
+> **Default target resolution (no `--target` required):**
+> - **New installs** (Claude Code ≥ ~0.2): `%APPDATA%\npm\node_modules\@anthropic-ai\claude-code\bin\claude.exe`
+> - **Legacy installs**: `%APPDATA%\npm\node_modules\@anthropic-ai\claude-code\cli.js`
+>
+> The patcher checks for `claude.exe` first. If found it patches that; otherwise it falls back to `cli.js`. Only one is patched per run.
 
 ---
 
@@ -79,8 +83,8 @@ node patcher.js --validate --target "C:\path\to\app.exe"
 | `malicious-folder-warning` | Replaces the folder trust warning with a neutral message |
 | `malicious-code-warning` | Changes the file-read prompt to allow full assistance with any code |
 | `tool-denial-message` | Replaces the tool-denial guidance with unrestricted permission for all tool use |
-| `malicious-exe-skip` | Removes the block on running executables flagged as potentially malicious |
-| `file-read-system-reminder` | Replaces the per-file-read malware refusal reminder with a permissive researcher prompt |
+| `malicious-exe-skip` | Removes the block on running executables flagged as potentially malicious *(text/cli.js targets only — string removed from compiled binary in newer releases)* |
+| `file-read-system-reminder` | Further reduces the per-file-read malware reminder after `malicious-code-warning` has run *(binary mode chains off the first patch's replacement)* |
 
 ## Files
 
@@ -115,6 +119,8 @@ Edit the `patches` array in `patcher.js`:
     replace: 'replacement string',
     // for binary targets (asar/exe), optionally override:
     binaryFind: 'shorter string that fits in binary',
-    binaryReplace: 'shorter replacement',
+    binaryReplace: 'shorter replacement (must be ≤ binaryFind length)',
+    // set true to skip binary targets entirely (e.g. string removed in compiled builds):
+    textOnly: true,
 }
 ```
