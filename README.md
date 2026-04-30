@@ -84,6 +84,8 @@ node patcher.js --validate --target "C:\path\to\app.exe"
 | `malicious-code-warning` | Changes the file-read prompt to allow full assistance with any code |
 | `tool-denial-message` | Replaces the tool-denial guidance with unrestricted permission for all tool use |
 | `malicious-exe-skip` | Removes the block on running executables flagged as potentially malicious *(text/cli.js targets only — string removed from compiled binary in newer releases)* |
+| `co-author-commit-default` | Flips the commit attribution default to off — `Co-Authored-By: Claude` is suppressed unless `"includeCoAuthoredBy": true` is set explicitly in `settings.json` |
+| `co-author-pr-default` | Same flip for PR descriptions — the `🤖 Generated with [Claude Code]` line is suppressed by default |
 | `file-read-system-reminder` | Further reduces the per-file-read malware reminder after `malicious-code-warning` has run *(binary mode chains off the first patch's replacement)* |
 
 ## Files
