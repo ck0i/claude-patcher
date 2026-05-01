@@ -49,8 +49,26 @@ function checkAndUpdateClaudeCode() {
 checkAndUpdateClaudeCode();
 patch();
 
-// find the real claude executable
-const claudePath = path.join(process.env.APPDATA, 'npm', 'claude.cmd');
+// find the real claude executable — prefer npm install, fall back to native installer
+const npmCmd = path.join(process.env.APPDATA || '', 'npm', 'claude.cmd');
+const nativeExe = path.join(process.env.USERPROFILE || process.env.HOME || '', '.local', 'bin', 'claude.exe');
+
+let claudePath, source;
+if (fs.existsSync(npmCmd)) {
+    claudePath = npmCmd;
+    source = 'npm';
+} else if (fs.existsSync(nativeExe)) {
+    claudePath = nativeExe;
+    source = 'native';
+} else {
+    console.error('[wrapper] no claude install found');
+    console.error(`  checked (npm): ${npmCmd}`);
+    console.error(`  checked (native): ${nativeExe}`);
+    process.exit(1);
+}
+
+// let the user know they're entering the patched context
+console.log(`\x1b[35m[patched]\x1b[0m launching claude (${source}) — patches active\n`);
 
 // forward all arguments to claude
 const args = process.argv.slice(2);

@@ -5,10 +5,17 @@ echo Claude Code Patcher Installer
 echo ==============================
 echo.
 
-:: add patcher dir to user PATH (before npm) so 'claude' runs the wrapper
+:: add patcher dir to user PATH (before npm/native) so 'claude' runs the wrapper
 set "PATCHER_DIR=%~dp0"
 if "%PATCHER_DIR:~-1%"=="\" set "PATCHER_DIR=%PATCHER_DIR:~0,-1%"
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0addpath.ps1"
+echo.
+
+:: write the claude.cmd shim — it forwards every 'claude' invocation through the wrapper
+:: so the patcher runs (and reapplies if needed) on each command before claude itself starts
+echo Installing claude.cmd shim...
+> "%~dp0claude.cmd" echo @echo off
+>>"%~dp0claude.cmd" echo node "%%~dp0claude-wrapper.js" %%*
 echo.
 
 :: apply patch immediately
