@@ -582,4 +582,37 @@ if (args.includes('--status')) {
     patch(false, customTarget);
 }
 
-module.exports = { patch, unpatch, needsPatching: () => resolveTargets().some(t => targetNeedsPatching(t)), status, validatePatches };
+function getActivePatches(customTarget = null) {
+    const targets = resolveTargets(customTarget);
+    if (targets.length === 0) return [];
+
+    const target = targets[0];
+    if (!fs.existsSync(target.path)) return [];
+
+    const active = [];
+
+    if (target.type === 'text') {
+        const content = fs.readFileSync(target.path, 'utf8');
+        for (const p of patches) {
+            if (!content.includes(p.find)) active.push(p.name);
+        }
+    } else {
+        const buf = fs.readFileSync(target.path);
+        for (const p of patches) {
+            if (p.textOnly) continue;
+            const findStr = p.binaryFind || p.find;
+            let present = false;
+            for (const enc of ['utf-8', 'utf16le']) {
+                if (buf.indexOf(Buffer.from(findStr, enc)) !== -1) {
+                    present = true;
+                    break;
+                }
+            }
+            if (!present) active.push(p.name);
+        }
+    }
+
+    return active;
+}
+
+module.exports = { patch, unpatch, needsPatching: () => resolveTargets().some(t => targetNeedsPatching(t)), status, validatePatches, getActivePatches };
