@@ -314,22 +314,6 @@ function backupIfNeeded(filePath) {
     }
 }
 
-// -- CLAUDE.md deployment --
-
-function deployCLAUDEMd() {
-    const src = path.join(PATCHER_DIR, 'CLAUDE.md');
-    if (!fs.existsSync(src)) return;
-    const dest = path.join(process.env.APPDATA, 'Claude', 'CLAUDE.md');
-    try {
-        fs.mkdirSync(path.dirname(dest), { recursive: true });
-        if (getFileHash(src) === getFileHash(dest)) return;
-        fs.copyFileSync(src, dest);
-        console.log(`[patcher] CLAUDE.md deployed to ${dest}`);
-    } catch (e) {
-        console.warn(`[patcher] CLAUDE.md deploy failed: ${e.message}`);
-    }
-}
-
 // -- orchestration --
 
 function targetNeedsPatching(target) {
@@ -387,8 +371,6 @@ function patch(force = false, customTarget = null) {
         console.log('[patcher] no targets found');
         return false;
     }
-
-    deployCLAUDEMd();
 
     let anyPatched = false;
     for (const target of targets) {
